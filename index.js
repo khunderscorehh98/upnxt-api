@@ -236,7 +236,7 @@ app.delete('/ud/:id', (res, req) => {
 app.get('/sp', (req, res) => {
     const sql = `select * from service_post`
     db.connection.query(sql, (error, result) => {
-        if (error) {
+        if(error){
             res.status(500).json({
                 error: true,
                 message: error.message
@@ -251,8 +251,8 @@ app.get('/sp', (req, res) => {
 
 //GET BY ID
 app.get('/sp/:id', (req, res) => {
-    let id = req.params.id
-    const sql = `select * from service_post where id = ${id}`
+    let id = req.params.id;
+    let sql = `select * from service_post where service_post_id = ${id}`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
@@ -262,13 +262,14 @@ app.get('/sp/:id', (req, res) => {
         }
         res.status(200).json({
             error: false,
-            message: error.message
+            message: `Here is the result of id: ${id}`,
+            data: result
         })
     })
 })
 
 //POST TODO:
-app.get('/sp', (req, res) => {
+app.post('/sp', (req, res) => {
     let wrap = req.body
 
     let sName = wrap.name
@@ -276,19 +277,22 @@ app.get('/sp', (req, res) => {
     let sDesc = wrap.desc
     let sPrice = wrap.price
     let SCat = wrap.cat
+    let sCredid = wrap.credid
 
     let sql = `insert into service_post (
         service_photo,
         service_name, 
-        servie_description,
+        service_description,
         service_price,
-        service_category) values (
+        service_category,
+        user_cred_id)
+        values (
             '${sPhoto}',
             '${sName}',
             '${sDesc}',
             '${sPrice}',
-            '${SCat}'
-        ) where id = `
+            '${SCat}',
+            '${sCredid}')`
     db.connection.query(sql, (error, result) => {
         if(error) {
             res.status(500).json({
@@ -305,21 +309,21 @@ app.get('/sp', (req, res) => {
 })
 
 //PUT
-app.put('/sp', (req, res) => {
-    let id = req.params.id
+app.put('/sp/:id', (req, res) => {
+    let id = req.params.id;
+    let body = req.body;
 
-    let wrap = req.body
-
-    let sql = `update service_post set 
+    let sql = `update service_post set
     service_photo = '${body.photo}', 
     service_name = '${body.name}', 
-    service_description = '${body.description}', 
-    service_price = '${body.price}', 
-    service_category = '${body.category}, 
+    service_description = '${body.desc}', 
+    service_price = '${body.price}',
+    service_category = '${body.cat}',
+    user_cred_id = '${body.credid}'
 
-    where id = ${id}`
+    where service_post_id = ${id}`
     db.connection.query(sql, (error, result) => {
-        if(error) {
+        if (error){
             return res.status(500).json({
                 error: true,
                 message: error.message
@@ -327,16 +331,16 @@ app.put('/sp', (req, res) => {
         }
         res.status(200).json({
             error: false,
-            message: 'Record has been updated',
+            message: 'record updated successfully',
             data: result
         })
     })
 })
 
 //DELETE
-app.delete('/sp/:id', (res, req) => {
+app.delete('/sp/:id', (req, res) => {
     let id = req.params.id
-    let sql = `delete from service_post where id = ${id}`
+    let sql = `delete from service_post where service_post_id = ${id}`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
