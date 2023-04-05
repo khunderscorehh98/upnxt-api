@@ -14,123 +14,13 @@ app.get("/", (req, res) => {
     })
 })
 
-
-//Get All
-app.get('/user', (req, res) => {
-    const sql = `select * from user`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            data: result
-        })
-    })
-})
-
-// Get by ID
-app.get('/user/:id', (req, res) => {
-    let id = req.params.id
-    const sql = `select * from user where id = ${id}`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            data: result
-        })
-    })
-})
-
-// Post
-app.post('/user', (req, res) => {
-    let wrap = req.body
-
-    let uName = wrap.name
-    let uAddress = wrap.address
-    let uContact = wrap.contact
-
-    const sql = `insert into user (name, address, contact) values ('${uName}', '${uAddress}', '${uContact}')`
-
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(201).json({
-            error: false,
-            message: 'Record has been added',
-            data: result
-        })
-    })
-})
-
-// Put
-app.put('/user/:id', (req, res) => {
-    let id = req.params.id
-
-    //wrap
-    let wrap = req.body
-
-    let uName = wrap.name
-    let uAddress = wrap.address
-    let uContact = wrap.contact
-
-    let sql = `update user set name = '${uName}', address = '${uAddress}', contact = ${uContact} where id = ${id}`
-
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: 'Record has been updated',
-            data: result
-        })
-    })
-
-})
-
-// Delete
-app.delete('/user/:id', (req, res) => {
-    let id = req.params.id
-    let sql = `delete from user where id = ${id}`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: 'Record has been deleted',
-            data: result
-        })
-    })
-})
-
-
 //------------------------------------------------USER------------------------------------------------
 
 //GET
-app.get('/users', (res, req) => {
-    const sql = 'select * from users'
+app.get('/users', (req, res) => {
+    let sql = `select * from users`
     db.connection.query(sql, (error, result) => {
-        if (error) {
+        if(error){
             res.status(500).json({
                 error: true,
                 message: error.message
@@ -166,15 +56,14 @@ app.get('/users/:id', (res, req) => {
 app.post('/users', (res, req) => {
     let wrap = req.body
 
-    let uid = wrap.id
     let uName = wrap.name
     let uPass = wrap.password
     let uEmail = wrap.email
     let uSkill = wrap.skills
     let uMobile = wrap.mobile
-    let uSocialMedia = wrap.sm
+    let uSocialMedia = wrap.social
     
-    let sql = `insert into users (id, name, password, email, skills, mobile, sm, )`
+    let sql = `insert into users (name, password, email, skills, mobile, sm) values ('${uName}', '${uPass}', '${uEmail}', '${uSkill}', ${uMobile}, '${uSocialMedia}')`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
@@ -248,7 +137,7 @@ app.get('/sp/:id', (req, res) => {
     })
 })
 
-//POST
+//POST TODO:
 app.get('/sp', (req, res) => {
     let wrap = req.body
 
@@ -258,7 +147,7 @@ app.get('/sp', (req, res) => {
     let sPrice = wrap.price
     let SCat = wrap.cat
 
-    let sql = `insert into service_post ()`
+    let sql = `insert into service_post (service_name, service_description, pricing, category) values () where id = `
     db.connection.query(sql, (error, result) => {
         if(error) {
             res.status(500).json({
@@ -275,6 +164,22 @@ app.get('/sp', (req, res) => {
 })
 
 //PUT
+app.put('/sp', (req, res) => {
+    let id = req.params.id
+
+    let wrap = req.body
+    
+    let sName = wrap.name
+    let sDesc = wrap.desc
+    let sPrice = wrap.price
+    let SCat = wrap.cat
+
+    let sql = `update service_post set `
+    db.connection.query(sql, (error, result) => {
+
+    })
+})
+
 //DELETE
 
 const PORT = 5000
