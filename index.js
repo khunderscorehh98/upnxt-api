@@ -137,8 +137,9 @@ app.get('/ud', (req, res) => {
 
 //GET BY ID
 app.get('/ud/:id', (req, res) => {
-    const sql = `select * from user_details where id = ${id}`
-    db.connection.query(sql, (err, result) => {
+    let id = req.params.id
+    const sql = `select * from user_details where user_details_id = ${id}`
+    db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
                 error: true,
@@ -146,22 +147,34 @@ app.get('/ud/:id', (req, res) => {
             })
         }
         res.status(200).json({
-            error: true,
-            message: error.message
+            error: false,
+            data: result
         })
     })
 })
 
 //POST TODO:
-app.post('/ud', (res, req) => {
+app.post('/ud', (req, res) => {
     let wrap = req.body
 
-    let uName = wrap.user_name
-    let uSkill = wrap.skills
-    let uMobile = wrap.mobile
-    let uSocialMedia = wrap.social
+    let [uName, uMobile, uDes, uPhoto, uCat, uPort, uFB, uIG, uTW, uLI, uBE, uCred] =
+    [wrap.user_name, wrap.user_mobile, wrap.user_description, wrap.user_photo, wrap.user_category, wrap.user_portfolio,
+    wrap.user_fb, wrap.user_ig, wrap.user_twitter, wrap.user_linkedin, wrap.user_behance, wrap.user_cred_id]
     
-    let sql = `insert into users (name, password, email, skills, mobile, sm) values ('${uName}', '${uPass}', '${uEmail}', '${uSkill}', ${uMobile}, '${uSocialMedia}')`
+    let sql = `insert into user_details 
+    (user_cred_id,
+    user_name,
+    user_mobile,
+    user_description,
+    user_photo,
+    user_category,
+    user_portfolio,
+    user_fb,
+    user_ig,
+    user_twitter,
+    user_linkedin,
+    user_behance) values 
+    ('${uCred}', '${uName}', '${uMobile}', '${uDes}', '${uPhoto}', '${uCat}', '${uPort}', '${uFB}', '${uIG}', '${uTW}', '${uLI}', '${uBE}')`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
@@ -183,20 +196,20 @@ app.put('/ud/:id', (req, res) => {
     let body = req.body;
 
     let sql = `update user_details set 
-    user_name = '${body.name}', 
-    user_mobile = '${body.mobile}', 
-    user_description = '${body.description}', 
-    user_photo = '${body.photo}', 
-    user_category = '${body.category}', }'
-    user_portfolio = '${body.portfolio}',
-    user_fb = '${body.fb}'
-    user_ig = '${body.ig}'
-    user_twitter = '${body.twitter}
-    user_linkedin = '${body.linkedin}'
-    user_behance = '${body.behance}'
+    user_name = '${body.user_name}', 
+    user_mobile = '${body.user_mobile}', 
+    user_description = '${body.user_description}', 
+    user_photo = '${body.user_photo}', 
+    user_category = '${body.user_category}', 
+    user_portfolio = '${body.user_portfolio}',
+    user_fb = '${body.user_fb}',
+    user_ig = '${body.user_ig}',
+    user_twitter = '${body.user_twitter}',
+    user_linkedin = '${body.user_linkedin}',
+    user_behance = '${body.user_behance}'
 
-    where id = ${id}`
-    db.connection.query(sql, (err, res) => {
+    where user_details_id = ${id}`
+    db.connection.query(sql, (error, result) => {
         if (error){
             return res.status(500).json({
                 error: true,
@@ -212,9 +225,9 @@ app.put('/ud/:id', (req, res) => {
 })
 
 //DELETE
-app.delete('/ud/:id', (res, req) => {
+app.delete('/ud/:id', (req, res) => {
     let id = req.params.id
-    let sql = `delete from user_details where id = ${id}`
+    let sql = `delete from user_details where user_details_id = ${id}`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
