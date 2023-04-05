@@ -75,40 +75,33 @@ app.post('/user',  (req, res) => {
     })
 })
 
-
-// //POST TODO:
-// app.post('/users', (res, req) => {
-//     let wrap = req.body
-
-//     let uName = wrap.name
-//     let uPass = wrap.password
-//     let uEmail = wrap.email
-//     let uSkill = wrap.skills
-//     let uMobile = wrap.mobile
-//     let uSocialMedia = wrap.social
-    
-//     let sql = `insert into users (name, password, email, skills, mobile, sm) values ('${uName}', '${uPass}', '${uEmail}', '${uSkill}', ${uMobile}, '${uSocialMedia}')`
-//     db.connection.query(sql, (error, result) => {
-//         if (error) {
-//             res.status(500).json({
-//                 error: true,
-//                 message: error.message
-//             })
-//         }
-//         res.status(201).json({
-//             error: false,
-//             message: 'Record has been added.',
-//             data: result
-//         })
-//     })
-// })
-
 //PUT
+app.put('/users/:id', (req, res) => {
+    let id = req.params.id;
+    let body = req.body;
+    let sql = `update user_cred set 
+    email = '${body.email}', 
+    password = '${body.password}' 
+    where id = ${id}`
+    db.connection.query(sql, (err, res) => {
+        if (error){
+            return res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            message: 'record updated successfully',
+            data: result
+        })
+    })
+})
 
 //DELETE
 app.delete('/users/:id', (res, req) => {
     let id = req.params.id
-    let sql = `delete from users where id = ${id}`
+    let sql = `delete from user_cred where id = ${id}`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
@@ -188,7 +181,21 @@ app.post('/ud', (res, req) => {
 app.put('/ud/:id', (req, res) => {
     let id = req.params.id;
     let body = req.body;
-    let sql = `update user_details set name = '${body.name}', email = '${body.email}', skills = '${body.skills}', mobile = '${body.mobile}', sm = '${body.sm}' where id = ${id}`
+
+    let sql = `update user_details set 
+    user_name = '${body.name}', 
+    user_mobile = '${body.mobile}', 
+    user_description = '${body.description}', 
+    user_photo = '${body.photo}', 
+    user_category = '${body.category}', }'
+    user_portfolio = '${body.portfolio}',
+    user_fb = '${body.fb}'
+    user_ig = '${body.ig}'
+    user_twitter = '${body.twitter}
+    user_linkedin = '${body.linkedin}'
+    user_behance = '${body.behance}'
+
+    where id = ${id}`
     db.connection.query(sql, (err, res) => {
         if (error){
             return res.status(500).json({
@@ -199,6 +206,25 @@ app.put('/ud/:id', (req, res) => {
         res.status(200).json({
             error: false,
             message: 'record updated successfully',
+            data: result
+        })
+    })
+})
+
+//DELETE
+app.delete('/ud/:id', (res, req) => {
+    let id = req.params.id
+    let sql = `delete from user_details where id = ${id}`
+    db.connection.query(sql, (error, result) => {
+        if (error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            message: 'Record has been deleted',
             data: result
         })
     })
@@ -257,8 +283,8 @@ app.get('/sp', (req, res) => {
         servie_description,
         service_price,
         service_category) values (
-            '${sName}',
             '${sPhoto}',
+            '${sName}',
             '${sDesc}',
             '${sPrice}',
             '${SCat}'
@@ -284,7 +310,14 @@ app.put('/sp', (req, res) => {
 
     let wrap = req.body
 
-    let sql = `update service_post set  `
+    let sql = `update service_post set 
+    service_photo = '${body.photo}', 
+    service_name = '${body.name}', 
+    service_description = '${body.description}', 
+    service_price = '${body.price}', 
+    service_category = '${body.category}, 
+
+    where id = ${id}`
     db.connection.query(sql, (error, result) => {
         if(error) {
             return res.status(500).json({
@@ -301,6 +334,23 @@ app.put('/sp', (req, res) => {
 })
 
 //DELETE
+app.delete('/sp/:id', (res, req) => {
+    let id = req.params.id
+    let sql = `delete from service_post where id = ${id}`
+    db.connection.query(sql, (error, result) => {
+        if (error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            message: 'Record has been deleted',
+            data: result
+        })
+    })
+})
 
 const PORT = 5000
 app.listen(PORT, () => {
