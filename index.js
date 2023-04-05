@@ -14,11 +14,11 @@ app.get("/", (req, res) => {
     })
 })
 
-//------------------------------------------------USER------------------------------------------------
+//------------------------------------------------USER_CRED------------------------------------------------
 
 //GET
-app.get('/users', (req, res) => {
-    let sql = `select * from users`
+app.get('/user', (req, res) => {
+    let sql = `select * from user_cred`
     db.connection.query(sql, (error, result) => {
         if(error){
             res.status(500).json({
@@ -34,9 +34,9 @@ app.get('/users', (req, res) => {
 })
 
 //GET BY ID
-app.get('/users/:id', (res, req) => {
+app.get('/user/:id', (res, req) => {
     let id = req.params.id
-    const sql = `select * from users where id = ${id}`
+    const sql = `select * from user_cred where id = ${id}`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
@@ -53,12 +53,117 @@ app.get('/users/:id', (res, req) => {
 })
 
 //POST TODO:
-app.post('/users', (res, req) => {
+app.post('/user',  (req, res) => {
     let wrap = req.body
 
-    let uName = wrap.name
-    let uPass = wrap.password
     let uEmail = wrap.email
+    let uPass = wrap.password
+
+    let sql = `insert into user_cred (password, email) values ('${uPass}', '${uEmail}')`
+    db.connection.query(sql, (error, result) => {
+        if (error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(201).json({
+            error: false,
+            message: 'Record has been added.',
+            data: result
+        })
+    })
+})
+
+
+// //POST TODO:
+// app.post('/users', (res, req) => {
+//     let wrap = req.body
+
+//     let uName = wrap.name
+//     let uPass = wrap.password
+//     let uEmail = wrap.email
+//     let uSkill = wrap.skills
+//     let uMobile = wrap.mobile
+//     let uSocialMedia = wrap.social
+    
+//     let sql = `insert into users (name, password, email, skills, mobile, sm) values ('${uName}', '${uPass}', '${uEmail}', '${uSkill}', ${uMobile}, '${uSocialMedia}')`
+//     db.connection.query(sql, (error, result) => {
+//         if (error) {
+//             res.status(500).json({
+//                 error: true,
+//                 message: error.message
+//             })
+//         }
+//         res.status(201).json({
+//             error: false,
+//             message: 'Record has been added.',
+//             data: result
+//         })
+//     })
+// })
+
+//PUT
+
+//DELETE
+app.delete('/users/:id', (res, req) => {
+    let id = req.params.id
+    let sql = `delete from users where id = ${id}`
+    db.connection.query(sql, (error, result) => {
+        if (error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            message: 'Record has been deleted',
+            data: result
+        })
+    })
+})
+
+//-----------------------------------------------USER_DETAILS--------------------------------------------------
+//GET ALL
+app.get('/ud', (req, res) => {
+    const sql = `select * from user_details`
+    db.connection.query(sql, (error, result) => {
+        if(error){
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            data: result
+        })
+    })
+})
+
+//GET BY ID
+app.get('/ud/:id', (req, res) => {
+    const sql = `select * from user_details where id = ${id}`
+    db.connection.query(sql, (err, result) => {
+        if (error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: true,
+            message: error.message
+        })
+    })
+})
+
+//POST TODO:
+app.post('/ud', (res, req) => {
+    let wrap = req.body
+
+    let uName = wrap.user_name
     let uSkill = wrap.skills
     let uMobile = wrap.mobile
     let uSocialMedia = wrap.social
@@ -80,21 +185,20 @@ app.post('/users', (res, req) => {
 })
 
 //PUT
-
-//DELETE
-app.delete('/users/:id', (res, req) => {
-    let id = req.params.id
-    let sql = `delete from users where id = ${id}`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
+app.put('/ud/:id', (req, res) => {
+    let id = req.params.id;
+    let body = req.body;
+    let sql = `update user_details set name = '${body.name}', email = '${body.email}', skills = '${body.skills}', mobile = '${body.mobile}', sm = '${body.sm}' where id = ${id}`
+    db.connection.query(sql, (err, res) => {
+        if (error){
+            return res.status(500).json({
                 error: true,
                 message: error.message
             })
         }
         res.status(200).json({
             error: false,
-            message: 'Record has been deleted',
+            message: 'record updated successfully',
             data: result
         })
     })
@@ -141,13 +245,24 @@ app.get('/sp/:id', (req, res) => {
 app.get('/sp', (req, res) => {
     let wrap = req.body
 
-    let uid = wrap.uid
     let sName = wrap.name
+    let sPhoto = wrap.photo
     let sDesc = wrap.desc
     let sPrice = wrap.price
     let SCat = wrap.cat
 
-    let sql = `insert into service_post (service_name, service_description, pricing, category) values () where id = `
+    let sql = `insert into service_post (
+        service_photo,
+        service_name, 
+        servie_description,
+        service_price,
+        service_category) values (
+            '${sName}',
+            '${sPhoto}',
+            '${sDesc}',
+            '${sPrice}',
+            '${SCat}'
+        ) where id = `
     db.connection.query(sql, (error, result) => {
         if(error) {
             res.status(500).json({
@@ -168,15 +283,20 @@ app.put('/sp', (req, res) => {
     let id = req.params.id
 
     let wrap = req.body
-    
-    let sName = wrap.name
-    let sDesc = wrap.desc
-    let sPrice = wrap.price
-    let SCat = wrap.cat
 
-    let sql = `update service_post set `
+    let sql = `update service_post set  `
     db.connection.query(sql, (error, result) => {
-
+        if(error) {
+            return res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            message: 'Record has been updated',
+            data: result
+        })
     })
 })
 
