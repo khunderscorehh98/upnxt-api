@@ -34,9 +34,9 @@ app.get('/user', (req, res) => {
 })
 
 //GET BY ID
-app.get('/user/:id', (res, req) => {
-    let id = req.params.id
-    const sql = `select * from user_cred where id = ${id}`
+app.get('/user/:id', (req, res) => {
+    let id = req.params.id;
+    let sql = `select * from user_cred where user_cred_id = ${id}`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
@@ -76,14 +76,14 @@ app.post('/user',  (req, res) => {
 })
 
 //PUT
-app.put('/users/:id', (req, res) => {
+app.put('/user/:id', (req, res) => {
     let id = req.params.id;
     let body = req.body;
     let sql = `update user_cred set 
     email = '${body.email}', 
     password = '${body.password}' 
-    where id = ${id}`
-    db.connection.query(sql, (err, res) => {
+    where user_cred_id = ${id}`
+    db.connection.query(sql, (error, result) => {
         if (error){
             return res.status(500).json({
                 error: true,
@@ -99,9 +99,9 @@ app.put('/users/:id', (req, res) => {
 })
 
 //DELETE
-app.delete('/users/:id', (res, req) => {
+app.delete('/user/:id', (req, res) => {
     let id = req.params.id
-    let sql = `delete from user_cred where id = ${id}`
+    let sql = `delete from user_cred where user_cred_id = ${id}`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
