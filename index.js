@@ -16,8 +16,8 @@ app.get("/", (req, res) => {
 
 //------------------------------------------------USER_CRED------------------------------------------------
 
-//GET
-app.get('/user', (req, res) => {
+//GET ALL
+app.get('/use', (req, res) => {
     let sql = `select * from user_cred`
     db.connection.query(sql, (error, result) => {
         if(error){
@@ -36,7 +36,7 @@ app.get('/user', (req, res) => {
 //GET BY ID
 app.get('/user/:id', (res, req) => {
     let id = req.params.id
-    const sql = `select * from user_cred where id = ${id}`
+    const sql = `select * from user_cred where user_cred_id = ${id}`
     db.connection.query(sql, (error, result) => {
         if (error) {
             res.status(500).json({
@@ -76,22 +76,22 @@ app.post('/user',  (req, res) => {
 })
 
 //PUT
-app.put('/users/:id', (req, res) => {
+app.put('/user', (req, res) => {
     let id = req.params.id;
     let body = req.body;
     let sql = `update user_cred set 
     email = '${body.email}', 
-    password = '${body.password}' 
-    where id = ${id}`
-    db.connection.query(sql, (err, res) => {
-        if (error){
+    password = '${body.password}'
+    where user_cred_id = ${id}`
+    db.connection.query(sql, (err, result) => {
+        if (err){
             return res.status(500).json({
-                error: true,
-                message: error.message
+                err: true,
+                message: err.message
             })
         }
         res.status(200).json({
-            error: false,
+            err: false,
             message: 'record updated successfully',
             data: result
         })
