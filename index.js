@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 
 /* ------------------------------------------------USER_CRED------------------------------------------------ */
 
-// GET ALL
+// GET ALL //
 app.get("/user", (req, res) => {
   let sql = `SELECT * from user_cred`;
   db.connection.query(sql, (error, result) => {
@@ -31,7 +31,7 @@ app.get("/user", (req, res) => {
   });
 });
 
-// GET BY ID
+// GET BY ID // 
 app.get("/user/:id", (req, res) => {
   let id = req.params.id;
   let sql = `SELECT * from user_cred WHERE user_cred_id = ${id}`;
@@ -50,7 +50,7 @@ app.get("/user/:id", (req, res) => {
   });
 });
 
-// POST TODO
+// POST //
 app.post("/user", (req, res) => {
   let wrap = req.body;
 
@@ -73,7 +73,7 @@ app.post("/user", (req, res) => {
   });
 });
 
-// PUT
+// PUT //
 app.put("/user/:id", (req, res) => {
   let id = req.params.id;
   let body = req.body;
@@ -96,7 +96,7 @@ app.put("/user/:id", (req, res) => {
   });
 });
 
-// DELETE
+// DELETE //
 app.delete("/user/:id", (req, res) => {
   let id = req.params.id;
   let sql = `DELETE FROM user_cred WHERE user_cred_id = ${id}`;
@@ -134,7 +134,7 @@ app.get("/ud", (req, res) => {
   });
 });
 
-// GET BY ID
+// GET BY ID //
 app.get("/ud/:id", (req, res) => {
   let id = req.params.id;
   const sql = `SELECT * FROM user_details WHERE user_details_id = ${id}`;
@@ -152,7 +152,7 @@ app.get("/ud/:id", (req, res) => {
   });
 });
 
-// POST TODO
+// POST //(?)
 app.post("/ud", (req, res) => {
   let wrap = req.body;
 
@@ -213,7 +213,7 @@ app.post("/ud", (req, res) => {
   });
 });
 
-// PUT
+// PUT //
 app.put("/ud/:id", (req, res) => {
   let id = req.params.id;
   let body = req.body;
@@ -267,7 +267,7 @@ app.delete("/ud/:id", (req, res) => {
 
 //------------------------------------------SERVICE_POST------------------------------------------
 
-//GET ALL
+//GET ALL //
 app.get('/sp', (req, res) => {
     const sql = `select * from service_post`
     db.connection.query(sql, (error, result) => {

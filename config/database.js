@@ -22,7 +22,6 @@ connection.connect((err) => {
     console.log('Database successfully connected')
 })
 
-console.log(connection)
 // // Create table within the database
 // connection.query('create table user(id int primary key auto_increment, name char(50), address char(50), contact int)', (err) => {
 //     if(err) throw err;
