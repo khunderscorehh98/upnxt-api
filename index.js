@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const functions = require("firebase-functions")
 
 const db = require("./config/database.js");
 
@@ -395,3 +396,5 @@ const PORT = 5000;
 app.listen(PORT, () => {
   console.log("Server is up");
 });
+
+exports.api = functions.https.onRequest(app)
