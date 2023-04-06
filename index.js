@@ -246,7 +246,7 @@ app.put("/ud/:id", (req, res) => {
   });
 });
 
-// DELETE
+// DELETE //
 app.delete("/ud/:id", (req, res) => {
   let id = req.params.id;
   let sql = `DELETE FROM user_details WHERE user_details_id = ${id}`;
@@ -311,7 +311,7 @@ app.post('/sp', (req, res) => {
     let sPhoto = wrap.photo
     let sDesc = wrap.desc
     let sPrice = wrap.price
-    let SCat = wrap.cat
+    let sCat = wrap.cat
     let sCredid = wrap.credid
 
   let sql = `insert into service_post (
