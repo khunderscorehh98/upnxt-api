@@ -1,10 +1,15 @@
 const express = require("express");
 const app = express();
+const functions = require("firebase-functions")
+const cors = require('cors');
 
 const db = require("./config/database.js");
 
 // MIDDLEWARE
 app.use(express.json());
+
+// CORS
+app.use(cors())
 
 app.get("/", (req, res) => {
   res.json({
@@ -395,3 +400,5 @@ const PORT = 5000;
 app.listen(PORT, () => {
   console.log("Server is up");
 });
+
+exports.api = functions.https.onRequest(app)
