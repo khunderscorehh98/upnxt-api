@@ -152,7 +152,7 @@ app.get("/ud/:id", (req, res) => {
   });
 });
 
-// POST //(?)
+// POST //
 app.post("/ud", (req, res) => {
   let wrap = req.body;
 
