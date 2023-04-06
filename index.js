@@ -1,234 +1,269 @@
-const express = require('express')
-const app = express()
+const express = require("express");
+const app = express();
 
-const db = require('./config/database.js')
+const db = require("./config/database.js");
 
+// MIDDLEWARE
+app.use(express.json());
 
-//Middleware
-app.use(express.json())
-
-//
 app.get("/", (req, res) => {
-    res.json({
-        message: 'Welcome to Database'
-    })
-})
+  res.json({
+    message: "Welcome to Database!",
+  });
+});
 
-//------------------------------------------------USER_CRED------------------------------------------------
+/* ------------------------------------------------USER_CRED------------------------------------------------ */
 
-//GET ALL
-app.get('/use', (req, res) => {
-    let sql = `select * from user_cred`
-    db.connection.query(sql, (error, result) => {
-        if(error){
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            data: result
-        })
-    })
-})
+// GET ALL
+app.get("/user", (req, res) => {
+  let sql = `SELECT * from user_cred`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      data: result,
+    });
+  });
+});
 
-//GET BY ID
-app.get('/user/:id', (res, req) => {
-    let id = req.params.id
-    const sql = `select * from user_cred where user_cred_id = ${id}`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: `Here is the result of id: ${id}`,
-            data: result
-        })
-    })
-})
+// GET BY ID
+app.get("/user/:id", (req, res) => {
+  let id = req.params.id;
+  let sql = `SELECT * from user_cred WHERE user_cred_id = ${id}`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: `Here is the result of id: ${id}.`,
+      data: result,
+    });
+  });
+});
 
-//POST TODO:
-app.post('/user',  (req, res) => {
-    let wrap = req.body
+// POST TODO
+app.post("/user", (req, res) => {
+  let wrap = req.body;
 
-    let uEmail = wrap.email
-    let uPass = wrap.password
+  let uEmail = wrap.email;
+  let uPass = wrap.password;
 
-    let sql = `insert into user_cred (password, email) values ('${uPass}', '${uEmail}')`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(201).json({
-            error: false,
-            message: 'Record has been added.',
-            data: result
-        })
-    })
-})
+  let sql = `INSERT INTO user_cred (password, email) VALUES ('${uPass}', '${uEmail}')`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(201).json({
+      error: false,
+      message: "Record has been added.",
+      data: result,
+    });
+  });
+});
 
-//PUT
-app.put('/user', (req, res) => {
-    let id = req.params.id;
-    let body = req.body;
-    let sql = `update user_cred set 
+// PUT
+app.put("/user/:id", (req, res) => {
+  let id = req.params.id;
+  let body = req.body;
+  let sql = `UPDATE user_cred SET 
     email = '${body.email}', 
-    password = '${body.password}'
-    where user_cred_id = ${id}`
-    db.connection.query(sql, (err, result) => {
-        if (err){
-            return res.status(500).json({
-                err: true,
-                message: err.message
-            })
-        }
-        res.status(200).json({
-            err: false,
-            message: 'record updated successfully',
-            data: result
-        })
-    })
-})
+    password = '${body.password}' 
+    where user_cred_id = ${id}`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: "Record updated successfully.",
+      data: result,
+    });
+  });
+});
 
-//DELETE
-app.delete('/users/:id', (res, req) => {
-    let id = req.params.id
-    let sql = `delete from user_cred where id = ${id}`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: 'Record has been deleted',
-            data: result
-        })
-    })
-})
+// DELETE
+app.delete("/user/:id", (req, res) => {
+  let id = req.params.id;
+  let sql = `DELETE FROM user_cred WHERE user_cred_id = ${id}`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: "Record has been deleted.",
+      data: result,
+    });
+  });
+});
 
-//-----------------------------------------------USER_DETAILS--------------------------------------------------
-//GET ALL
-app.get('/ud', (req, res) => {
-    const sql = `select * from user_details`
-    db.connection.query(sql, (error, result) => {
-        if(error){
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            data: result
-        })
-    })
-})
+/* -----------------------------------------------USER_DETAILS-------------------------------------------------- */
 
-//GET BY ID
-app.get('/ud/:id', (req, res) => {
-    const sql = `select * from user_details where id = ${id}`
-    db.connection.query(sql, (err, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: true,
-            message: error.message
-        })
-    })
-})
+// GET ALL
+app.get("/ud", (req, res) => {
+  const sql = `SELECT * FROM user_details`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      data: result,
+    });
+  });
+});
 
-//POST TODO:
-app.post('/ud', (res, req) => {
-    let wrap = req.body
+// GET BY ID
+app.get("/ud/:id", (req, res) => {
+  let id = req.params.id;
+  const sql = `SELECT * FROM user_details WHERE user_details_id = ${id}`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      data: result,
+    });
+  });
+});
 
-    let uName = wrap.user_name
-    let uSkill = wrap.skills
-    let uMobile = wrap.mobile
-    let uSocialMedia = wrap.social
-    
-    let sql = `insert into users (name, password, email, skills, mobile, sm) values ('${uName}', '${uPass}', '${uEmail}', '${uSkill}', ${uMobile}, '${uSocialMedia}')`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(201).json({
-            error: false,
-            message: 'Record has been added.',
-            data: result
-        })
-    })
-})
+// POST TODO
+app.post("/ud", (req, res) => {
+  let wrap = req.body;
 
-//PUT
-app.put('/ud/:id', (req, res) => {
-    let id = req.params.id;
-    let body = req.body;
+  let [
+    uName,
+    uMobile,
+    uDes,
+    uPhoto,
+    uCat,
+    uPort,
+    uFB,
+    uIG,
+    uTW,
+    uLI,
+    uBE,
+    uCred,
+  ] = [
+    wrap.user_name,
+    wrap.user_mobile,
+    wrap.user_description,
+    wrap.user_photo,
+    wrap.user_category,
+    wrap.user_portfolio,
+    wrap.user_fb,
+    wrap.user_ig,
+    wrap.user_twitter,
+    wrap.user_linkedin,
+    wrap.user_behance,
+    wrap.user_cred_id,
+  ];
 
-    let sql = `update user_details set 
-    user_name = '${body.name}', 
-    user_mobile = '${body.mobile}', 
-    user_description = '${body.description}', 
-    user_photo = '${body.photo}', 
-    user_category = '${body.category}', }'
-    user_portfolio = '${body.portfolio}',
-    user_fb = '${body.fb}'
-    user_ig = '${body.ig}'
-    user_twitter = '${body.twitter}
-    user_linkedin = '${body.linkedin}'
-    user_behance = '${body.behance}'
+  let sql = `INSERT INTO user_details 
+    (user_cred_id,
+    user_name,
+    user_mobile,
+    user_description,
+    user_photo,
+    user_category,
+    user_portfolio,
+    user_fb,
+    user_ig,
+    user_twitter,
+    user_linkedin,
+    user_behance) VALUES 
+    ('${uCred}', '${uName}', '${uMobile}', '${uDes}', '${uPhoto}', '${uCat}', '${uPort}', '${uFB}', '${uIG}', '${uTW}', '${uLI}', '${uBE}')`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(201).json({
+      error: false,
+      message: "Record has been added.",
+      data: result,
+    });
+  });
+});
 
-    where id = ${id}`
-    db.connection.query(sql, (err, res) => {
-        if (error){
-            return res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: 'record updated successfully',
-            data: result
-        })
-    })
-})
+// PUT
+app.put("/ud/:id", (req, res) => {
+  let id = req.params.id;
+  let body = req.body;
 
-//DELETE
-app.delete('/ud/:id', (res, req) => {
-    let id = req.params.id
-    let sql = `delete from user_details where id = ${id}`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: 'Record has been deleted',
-            data: result
-        })
-    })
-})
+  let sql = `UPDATE user_details SET 
+    user_name = '${body.user_name}', 
+    user_mobile = '${body.user_mobile}', 
+    user_description = '${body.user_description}', 
+    user_photo = '${body.user_photo}', 
+    user_category = '${body.user_category}', 
+    user_portfolio = '${body.user_portfolio}',
+    user_fb = '${body.user_fb}',
+    user_ig = '${body.user_ig}',
+    user_twitter = '${body.user_twitter}',
+    user_linkedin = '${body.user_linkedin}',
+    user_behance = '${body.user_behance}'
+    WHERE user_details_id = ${id}`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: "Record updated successfully.",
+      data: result,
+    });
+  });
+});
+
+// DELETE
+app.delete("/ud/:id", (req, res) => {
+  let id = req.params.id;
+  let sql = `DELETE FROM user_details WHERE user_details_id = ${id}`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: "Record has been deleted.",
+      data: result,
+    });
+  });
+});
 
 //------------------------------------------SERVICE_POST------------------------------------------
 
@@ -268,7 +303,7 @@ app.get('/sp/:id', (req, res) => {
     })
 })
 
-//POST TODO:
+//POST
 app.post('/sp', (req, res) => {
     let wrap = req.body
 
@@ -279,7 +314,7 @@ app.post('/sp', (req, res) => {
     let SCat = wrap.cat
     let sCredid = wrap.credid
 
-    let sql = `insert into service_post (
+  let sql = `insert into service_post (
         service_photo,
         service_name, 
         service_description,
@@ -291,7 +326,7 @@ app.post('/sp', (req, res) => {
             '${sName}',
             '${sDesc}',
             '${sPrice}',
-            '${SCat}',
+            '${sCat}',
             '${sCredid}')`
     db.connection.query(sql, (error, result) => {
         if(error) {
@@ -321,42 +356,42 @@ app.put('/sp/:id', (req, res) => {
     service_category = '${body.cat}',
     user_cred_id = '${body.credid}'
 
-    where service_post_id = ${id}`
-    db.connection.query(sql, (error, result) => {
-        if (error){
-            return res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: 'record updated successfully',
-            data: result
-        })
-    })
-})
+    where id = ${id}`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: "Record has been updated",
+      data: result,
+    });
+  });
+});
 
 //DELETE
-app.delete('/sp/:id', (req, res) => {
-    let id = req.params.id
-    let sql = `delete from service_post where service_post_id = ${id}`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: 'Record has been deleted',
-            data: result
-        })
-    })
-})
+app.delete("/sp/:id", (res, req) => {
+  let id = req.params.id;
+  let sql = `delete from service_post where id = ${id}`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: "Record has been deleted",
+      data: result,
+    });
+  });
+});
 
-const PORT = 5000
+const PORT = 5000;
 app.listen(PORT, () => {
-    console.log('Server is up')
-})
+  console.log("Server is up");
+});
