@@ -284,7 +284,7 @@ app.get('/sp', (req, res) => {
     })
 })
 
-//GET BY ID
+//GET BY ID //
 app.get('/sp/:id', (req, res) => {
     let id = req.params.id;
     let sql = `select * from service_post where service_post_id = ${id}`
@@ -303,7 +303,7 @@ app.get('/sp/:id', (req, res) => {
     })
 })
 
-//POST
+//POST //
 app.post('/sp', (req, res) => {
     let wrap = req.body
 
@@ -343,7 +343,7 @@ app.post('/sp', (req, res) => {
     })
 })
 
-//PUT
+//PUT //
 app.put('/sp/:id', (req, res) => {
     let id = req.params.id;
     let body = req.body;
@@ -356,7 +356,7 @@ app.put('/sp/:id', (req, res) => {
     service_category = '${body.cat}',
     user_cred_id = '${body.credid}'
 
-    where id = ${id}`;
+    where service_post_id = ${id}`;
   db.connection.query(sql, (error, result) => {
     if (error) {
       return res.status(500).json({
@@ -372,24 +372,24 @@ app.put('/sp/:id', (req, res) => {
   });
 });
 
-//DELETE
-app.delete("/sp/:id", (res, req) => {
-  let id = req.params.id;
-  let sql = `delete from service_post where id = ${id}`;
+//DELETE //
+app.delete('/sp/:id', (req, res) => {
+  let id = req.params.id
+  let sql = `delete from service_post where service_post_id = ${id}`
   db.connection.query(sql, (error, result) => {
-    if (error) {
-      res.status(500).json({
-        error: true,
-        message: error.message,
-      });
-    }
-    res.status(200).json({
-      error: false,
-      message: "Record has been deleted",
-      data: result,
-    });
-  });
-});
+      if (error) {
+          res.status(500).json({
+              error: true,
+              message: error.message
+          })
+      }
+      res.status(200).json({
+          error: false,
+          message: 'Record has been deleted',
+          data: result
+      })
+  })
+})
 
 const PORT = 5000;
 app.listen(PORT, () => {
