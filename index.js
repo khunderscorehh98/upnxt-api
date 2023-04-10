@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const functions = require("firebase-functions")
-const cors = require('cors');
+const functions = require("firebase-functions");
+const cors = require("cors");
 
 const db = require("./config/database.js");
 
@@ -9,7 +9,7 @@ const db = require("./config/database.js");
 app.use(express.json());
 
 // CORS
-app.use(cors())
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.json({
@@ -36,7 +36,7 @@ app.get("/user", (req, res) => {
   });
 });
 
-// GET BY ID // 
+// GET BY ID //
 app.get("/user/:id", (req, res) => {
   let id = req.params.id;
   let sql = `SELECT * from user_cred WHERE user_cred_id = ${id}`;
@@ -273,51 +273,70 @@ app.delete("/ud/:id", (req, res) => {
 //------------------------------------------SERVICE_POST------------------------------------------
 
 //GET ALL //
-app.get('/sp', (req, res) => {
-    const sql = `select * from service_post`
-    db.connection.query(sql, (error, result) => {
-        if(error){
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            data: result
-        })
-    })
-})
+app.get("/sp", (req, res) => {
+  const sql = `select * from service_post`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      data: result,
+    });
+  });
+});
 
 //GET BY ID //
-app.get('/sp/:id', (req, res) => {
-    let id = req.params.id;
-    let sql = `select * from service_post where service_post_id = ${id}`
-    db.connection.query(sql, (error, result) => {
-        if (error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: `Here is the result of id: ${id}`,
-            data: result
-        })
-    })
-})
+app.get("/sp/:id", (req, res) => {
+  let id = req.params.id;
+  let sql = `select * from service_post where service_post_id = ${id}`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: `Here is the result of id: ${id}`,
+      data: result,
+    });
+  });
+});
+
+// GET BY SERVICE_CATEGORY //
+app.get("/sp/category/:category", (req, res) => {
+  let category = req.params.category;
+  let sql = `SELECT * FROM service_post WHERE service_category = ?`;
+  db.connection.query(sql, [category], (error, result) => {
+    if (error) {
+      res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: `Here are the results for the category '${category}':`,
+      data: result,
+    });
+  });
+});
 
 //POST //
-app.post('/sp', (req, res) => {
-    let wrap = req.body
+app.post("/sp", (req, res) => {
+  let wrap = req.body;
 
-    let sName = wrap.name
-    let sPhoto = wrap.photo
-    let sDesc = wrap.desc
-    let sPrice = wrap.price
-    let sCat = wrap.cat
-    let sCredid = wrap.credid
+  let sName = wrap.name;
+  let sPhoto = wrap.photo;
+  let sDesc = wrap.desc;
+  let sPrice = wrap.price;
+  let sCat = wrap.cat;
+  let sCredid = wrap.credid;
 
   let sql = `insert into service_post (
         service_photo,
@@ -332,28 +351,28 @@ app.post('/sp', (req, res) => {
             '${sDesc}',
             '${sPrice}',
             '${sCat}',
-            '${sCredid}')`
-    db.connection.query(sql, (error, result) => {
-        if(error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(201).json({
-            error: false,
-            message: 'Post has been created',
-            data: result
-        })
-    })
-})
+            '${sCredid}')`;
+  db.connection.query(sql, (error, result) => {
+    if (error) {
+      res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(201).json({
+      error: false,
+      message: "Post has been created",
+      data: result,
+    });
+  });
+});
 
 //PUT //
-app.put('/sp/:id', (req, res) => {
-    let id = req.params.id;
-    let body = req.body;
+app.put("/sp/:id", (req, res) => {
+  let id = req.params.id;
+  let body = req.body;
 
-    let sql = `update service_post set
+  let sql = `update service_post set
     service_photo = '${body.photo}', 
     service_name = '${body.name}', 
     service_description = '${body.desc}', 
@@ -378,27 +397,27 @@ app.put('/sp/:id', (req, res) => {
 });
 
 //DELETE //
-app.delete('/sp/:id', (req, res) => {
-  let id = req.params.id
-  let sql = `delete from service_post where service_post_id = ${id}`
+app.delete("/sp/:id", (req, res) => {
+  let id = req.params.id;
+  let sql = `delete from service_post where service_post_id = ${id}`;
   db.connection.query(sql, (error, result) => {
-      if (error) {
-          res.status(500).json({
-              error: true,
-              message: error.message
-          })
-      }
-      res.status(200).json({
-          error: false,
-          message: 'Record has been deleted',
-          data: result
-      })
-  })
-})
+    if (error) {
+      res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: "Record has been deleted",
+      data: result,
+    });
+  });
+});
 
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log("Server is up");
 });
 
-exports.api = functions.https.onRequest(app)
+exports.api = functions.https.onRequest(app);
