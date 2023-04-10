@@ -396,6 +396,29 @@ app.delete('/sp/:id', (req, res) => {
   })
 })
 
+
+//-----------LOGIN-----------
+
+//POST
+app.post('/login', (res, req) => {
+  let sql = `select * from login`
+  db.connection(sql, (error, result) => {
+    if(error) {
+      res.status(500).json({
+        error: true,
+        message: error.message
+      })
+      res.status(200).json({
+        error: false,
+        data: result
+      })
+    }
+  })
+})
+
+//GET
+app.get()
+
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log("Server is up");
