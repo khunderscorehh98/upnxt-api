@@ -157,6 +157,25 @@ app.get("/ud/:id", (req, res) => {
   });
 });
 
+// GET BY SERVICE_CATEGORY //
+app.get("/ud/category/:category", (req, res) => {
+  let category = req.params.category;
+  let sql = `SELECT * FROM user_details WHERE user_category = ?`;
+  db.connection.query(sql, [category], (error, result) => {
+    if (error) {
+      res.status(500).json({
+        error: true,
+        message: error.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      message: `Here are the results for the category '${category}':`,
+      data: result,
+    });
+  });
+});
+
 // POST //
 app.post("/ud", (req, res) => {
   let wrap = req.body;
