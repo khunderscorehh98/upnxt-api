@@ -157,7 +157,7 @@ app.get("/ud/:id", (req, res) => {
   });
 });
 
-// GET BY SERVICE_CATEGORY //
+// GET BY USER_CATEGORY //
 app.get("/ud/category/:category", (req, res) => {
   let category = req.params.category;
   let sql = `SELECT * FROM user_details WHERE user_category = ?`;
